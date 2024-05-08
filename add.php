@@ -9,19 +9,20 @@ $conn = new mysqli($servername, $username, $password);
 if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
-$db=mysqli_select_db($conn,"employee");
+$db=mysqli_select_db($conn,"blog");
 
 if(isset($_POST['submit']))
 {
   
-   echo $name=$_POST['name'];
-   echo  $phone=$_POST['phone'];
-   echo  $email=$_POST['email'];
-   $sql="INSERT INTO information(`NAME`, `PHONE`, `EMAIL`) VALUES ('$name','$phone','$email')";
-   
+    $Title=$_POST['name'];
+    $Description=$_POST['description'];
+    $category =$_POST['category'];
+  
+   $sql="INSERT INTO blogpost(`Title`, `Description`,`category`) VALUES ('$Title','$Description','$category')";
+ echo $sql; 
 if(mysqli_query($conn,$sql))
 {
-    echo '<script> location.replace("oh.php")</script>';
+    echo '<script> location.replace("index.php")</script>';
 }
 else
 {
@@ -38,7 +39,7 @@ else
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Management </title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
@@ -47,29 +48,26 @@ else
         <div class="col-md-9">
                         <div class="card">
                 <div class="card-header">
-                   <h1>Employee Management</h1> 
+                   <h1>Blog Post </h1> 
                 </div>
                 <div class="card-body">
                 <form action="add.php" method="post">
             <div class="mb-3">
+            
             <div>
-                <label>ID</label>
-                <input type="number"  name="id"class="form-control">
+                <label>Title</label>
+                <input type="text" name="name" class="form-control" required>
             </div>
             <div>
-                <label>NAME</label>
-                <input type="text" name="name" class="form-control">
-            </div>
+                <label>Description</label> <br>
+               <textarea name="description" rows="4" cols="105" required class="form-control"></textarea>
+            </div> 
             <div>
-                <label>Phone</label>
-                <input type="number"name="phone" class="form-control">
+                <label>Category</label>
+                <input type="text" name="category" class="form-control" required> <br>
             </div>
-            <div>
-                <label>Email</label>
-                <input type="email" name="email" class="form-control" required>
-            </div><br>
            
-            <input type="submit" class="btn btn-primary" name="submit" value= "Register">
+            <input type="submit" class="btn btn-primary" name="submit" value= "ADD">
             </form>
                 </div>
                 

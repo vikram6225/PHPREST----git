@@ -1,4 +1,5 @@
 <?php
+
 $servername = "localhost";
 $username = "root";
 $password = "";
@@ -9,55 +10,47 @@ $conn = new mysqli($servername, $username, $password);
 if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
+$db=mysqli_select_db($conn,"blog");
 
-$db=mysqli_select_db($conn,"employee");
+  
+   if(isset($_GET['updateid'])) {
+    $id = $_GET['updateid'];
 
-$edit=$_GET['edit'];
-$sql= "SELECT * FROM `information` WHERE id=' $edit' ";
-$run=mysqli_query($conn,$sql);
+     $sql="SELECT * FROM `blogpost` WHERE id='$id'";
+     $result=mysqli_query($conn,$sql);
+     $row=mysqli_fetch_assoc($result);
+     $title=$row['Title'];
+     $description=$row['Description'];
+     $category=$row['category'];
 
-while($row= mysqli_fetch_array($run)){
-    $uid=$row['id'];
-    $name=$row['name'];
-    $phone=$row['phone'];
+   if(isset($_POST['submit'])){
+         $title=$_POST['name'];
+         $description=$_POST['description'];
+         $category=$_POST['category'];
 
-    $email=$row['email'];
-}
-?>
+         $sql = "UPDATE `blogpost` SET id='$id',Title='$title',Description='$description', category='$category' WHERE id='$id'";
 
-<?php
-$conn = new mysqli($servername, $username, $password);
-$db=mysqli_select_db($conn,"employee");
 
-if(isset($_POST['submit']))
-{
-    $edit=$_GET['edit'];
+         $result=mysqli_query($conn,$sql);
+         if($result){
+          // echo "updated successfully";
+           header('location:index.php');
+         }
+         else{
+            die(mysqli_error($conn));
+         }
+   }}
 
-   $name=$_POST['name'];
- $phone=$_POST['phone'];
-    $email=$_POST['email'];
-   $sql="UPDATE `information` SET `NAME`='$name',`PHONE`='$phone',`EMAIL`='$email' WHERE id='$edit";
-   
-if(mysqli_query($conn,$sql))
-{
-    echo '<script> location.replace("oh.php")</script>';
-}
-else
-{
-    echo"some thing error".$conn->error;
-}
 
-}
 
 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Management </title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
@@ -66,27 +59,26 @@ else
         <div class="col-md-9">
                         <div class="card">
                 <div class="card-header">
-                   <h1>Employee Management</h1> 
+                   <h1>Blog Post </h1> 
                 </div>
                 <div class="card-body">
-                <form action="add.php" method="post">
+                <form  method="post">
             <div class="mb-3">
+            
             <div>
-                <label>ID</label>
-                <input type="number"  name="id"class="form-control"  value="<?php echo  $ID; ?>">
+                <label>Title</label>
+                <input type="text" name="name" class="form-control" required value=<?php echo $title;?> >
+            </div>
+            <div> 
+                <label>Description</label> <br>
+               <textarea name="description" rows="4" cols="105" required><?php echo $description;?></textarea>
             </div>
             <div>
-                <label>NAME</label>
-                <input type="text" class="form-control" value="<?php echo  $NAME; ?>">
+                <label>Category</label>
+                <input type="text" name="category" class="form-control" value=<?php echo $category;?> required> <br>
             </div>
-            <div>
-                <label>Phone</label>
-                <input type="number"name="phone" class="form-control" value="<?php echo $PHONE; ?>">
-            </div>
-            <div>
-                <label>Email</label>
-                <input type="email" class="form-control" required value="<?php echo  $EMAIL; ?>">
-            </div><br>
+          
+          
            
             <input type="submit" class="btn btn-primary" name="submit" value= "Update">
             </form>
@@ -98,3 +90,6 @@ else
    </div>
 </body>
 </html>
+
+
+
